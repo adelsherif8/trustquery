@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Inter,sans-serif}
+body{background:#0b0f17;color:#e6eaf2;width:1600px;height:600px;overflow:hidden;position:relative}
+.wrap{padding:44px 54px}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.logo{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#4f8cff,#22d3a6);color:#08111f;font-size:1.3rem}
+.head h1{font-size:1.7rem;letter-spacing:-.02em}
+.head p{color:#8b95a7;font-size:.98rem;margin-top:3px}
+.flow{display:flex;align-items:center;justify-content:space-between;gap:0;margin-top:54px}
+.node{width:200px;background:#121826;border:1px solid #263042;border-radius:16px;padding:20px 16px;text-align:center;position:relative}
+.node .ic{width:52px;height:52px;border-radius:13px;display:grid;place-items:center;margin:0 auto 12px;font-size:1.35rem}
+.node h3{font-size:1.02rem;margin-bottom:6px}
+.node p{font-size:.8rem;color:#8b95a7;line-height:1.4}
+.arrow{flex:1;height:2px;background:linear-gradient(90deg,#2a3446,#4f8cff);position:relative;margin:0 -4px}
+.arrow::after{content:'';position:absolute;right:-2px;top:-5px;border-left:9px solid #4f8cff;border-top:6px solid transparent;border-bottom:6px solid transparent}
+.c-blue{background:rgba(79,140,255,.15);color:#7fb0ff}
+.c-green{background:rgba(34,211,166,.15);color:#34e0b8}
+.c-purple{background:rgba(167,139,250,.16);color:#b6a4fb}
+.c-amber{background:rgba(245,166,35,.15);color:#f5b74e}
+.govern{margin-top:52px;background:linear-gradient(180deg,rgba(79,140,255,.08),rgba(34,211,166,.05));border:1px solid #263042;border-radius:16px;padding:22px 26px;display:flex;align-items:center;gap:26px}
+.govern .gic{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,#4f8cff,#22d3a6);color:#08111f;flex-shrink:0}
+.govern h3{font-size:1.15rem;margin-bottom:4px}
+.govern p{color:#9aa4b6;font-size:.9rem;line-height:1.5}
+.tags{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.tags span{font-size:.8rem;padding:6px 13px;border-radius:8px;background:#0e1420;border:1px solid #263042;color:#c7d2e5}
+.foot{position:absolute;bottom:22px;left:54px;right:54px;display:flex;justify-content:space-between;color:#6b7688;font-size:.85rem}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#34e0b8;border:1px solid rgba(34,211,166,.35);background:rgba(34,211,166,.08);padding:6px 13px;border-radius:999px}
+</style></head>
+<body><div class="wrap">
+  <div class="head">
+    <div class="logo"><i class="fa-solid fa-shield-halved"></i></div>
+    <div><h1>TrustQuery — Governed NL-to-SQL Pipeline</h1>
+    <p>How a plain-English question becomes a number a CFO can trust</p></div>
+  </div>
+
+  <div class="flow">
+    <div class="node"><div class="ic c-blue"><i class="fa-solid fa-comment-dots"></i></div>
+      <h3>Question</h3><p>"Occupancy rate for each city"</p></div>
+    <div class="arrow"></div>
+    <div class="node"><div class="ic c-green"><i class="fa-solid fa-magnifying-glass"></i></div>
+      <h3>Metadata-RAG</h3><p>Embeds &amp; retrieves relevant metrics, dimensions, glossary</p></div>
+    <div class="arrow"></div>
+    <div class="node"><div class="ic c-purple"><i class="fa-solid fa-robot"></i></div>
+      <h3>NL2SQL Planner</h3><p>LLM emits a validated query spec — never raw SQL</p></div>
+    <div class="arrow"></div>
+    <div class="node"><div class="ic c-amber"><i class="fa-solid fa-diagram-project"></i></div>
+      <h3>Compiler + Guardrail</h3><p>Spec → SQL using only certified joins. Bad joins impossible</p></div>
+    <div class="arrow"></div>
+    <div class="node"><div class="ic c-green"><i class="fa-solid fa-circle-check"></i></div>
+      <h3>Trusted Answer</h3><p>Reconciled number + compiled SQL shown</p></div>
+  </div>
+
+  <div class="govern">
+    <div class="gic"><i class="fa-solid fa-layer-group"></i></div>
+    <div>
+      <h3>Governed semantic layer + eval-driven development</h3>
+      <p>One certified definition per metric · certified join paths · non-additive ratios handled explicitly · every golden question reconciled against an independent trusted-SQL report.</p>
+      <div class="tags"><span>Certified metrics</span><span>Fan-out safe</span><span>Grain guards</span><span>Reconciliation evals</span><span>Regression tested</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="badge"><i class="fa-solid fa-bolt"></i> Live on OpenAI · gpt-4o-mini + embeddings</span>
+    <span>Python · FastAPI · DuckDB · OpenAI &nbsp;·&nbsp; trustquery.vercel.app</span>
+  </div>
+</div></body></html>

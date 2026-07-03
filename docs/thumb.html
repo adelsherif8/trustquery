@@ -1,0 +1,88 @@
+<!doctype html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,'Segoe UI',Inter,sans-serif}
+body{width:1200px;height:750px;overflow:hidden;position:relative;color:#e6eaf2;
+  background:radial-gradient(60% 55% at 15% 10%,rgba(79,140,255,.20),transparent 60%),
+             radial-gradient(55% 55% at 92% 95%,rgba(34,211,166,.18),transparent 60%),#0a0e16}
+.grid{position:absolute;inset:0;opacity:.28;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:46px 46px;mask-image:radial-gradient(circle at 40% 40%,#000,transparent 80%)}
+.wrap{position:relative;padding:56px 60px;height:100%;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:15px;margin-bottom:30px}
+.logo{width:58px;height:58px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#4f8cff,#22d3a6);color:#08111f;font-size:1.6rem}
+.brand .n{font-size:1.55rem;font-weight:700;letter-spacing:-.02em}
+.brand .n small{display:block;font-size:.82rem;font-weight:500;color:#8b95a7;letter-spacing:0}
+.live{margin-left:auto;display:inline-flex;align-items:center;gap:9px;font-size:.86rem;font-weight:600;color:#34e0b8;border:1px solid rgba(34,211,166,.4);background:rgba(34,211,166,.09);padding:9px 16px;border-radius:999px}
+.live .dot{width:9px;height:9px;border-radius:50%;background:#34e0b8;box-shadow:0 0 10px #34e0b8}
+.main{display:flex;gap:44px;flex:1;align-items:center}
+.left{width:560px}
+.left h1{font-size:3.2rem;line-height:1.05;letter-spacing:-.03em;font-weight:700}
+.left h1 .g{background:linear-gradient(120deg,#7fb0ff,#34e0b8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.left .sub{font-size:1.18rem;color:#aeb7c7;margin-top:18px;line-height:1.5}
+.feats{margin-top:30px;display:flex;flex-direction:column;gap:13px}
+.feat{display:flex;align-items:center;gap:13px;font-size:1.02rem;color:#d6dde9}
+.feat i{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:.95rem;background:rgba(79,140,255,.16);color:#7fb0ff;flex-shrink:0}
+.feat.g i{background:rgba(34,211,166,.16);color:#34e0b8}
+/* right mock card */
+.mock{flex:1;background:linear-gradient(180deg,#121826,#0e1420);border:1px solid #26324a;border-radius:20px;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.qbar{display:flex;align-items:center;gap:10px;background:#0b111c;border:1px solid #26324a;border-radius:11px;padding:12px 14px;font-size:.92rem;color:#cdd6e6}
+.qbar i{color:#4f8cff}
+.ans{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:1.12rem;font-weight:700}
+.ans i{color:#34e0b8}
+.trust{font-size:.78rem;color:#8b95a7;margin:6px 0 14px;display:flex;align-items:center;gap:7px}
+.trust i{color:#34e0b8}
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:flex;align-items:center;gap:12px;font-size:.85rem}
+.bar .lbl{width:96px;color:#c7d2e5}
+.bar .track{flex:1;height:9px;border-radius:6px;background:#1b2334;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5a97ff,#2ee0ad);box-shadow:0 0 10px rgba(46,224,173,.4)}
+.bar .v{width:48px;text-align:right;color:#e6eaf2;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap}
+.chips span{font-size:.74rem;padding:6px 11px;border-radius:8px;background:#0b111c;border:1px solid #26324a;color:#9fb0c8}
+.foot{margin-top:22px;display:flex;align-items:center;justify-content:space-between;color:#7b8698;font-size:.92rem}
+.stack{display:flex;gap:9px}
+.stack span{font-size:.82rem;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid #26324a;color:#c7d2e5}
+</style></head>
+<body>
+<div class="grid"></div>
+<div class="wrap">
+  <div class="brand">
+    <div class="logo"><i class="fa-solid fa-shield-halved"></i></div>
+    <div class="n">TrustQuery<small>Governed AI Data Analyst</small></div>
+    <div class="live"><span class="dot"></span> Live on OpenAI</div>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <h1>Ask your data in English.<br/><span class="g">Get numbers you can trust.</span></h1>
+      <div class="sub">NL-to-SQL over a governed semantic layer — the same correct, reconciled answer every time.</div>
+      <div class="feats">
+        <div class="feat"><i class="fa-solid fa-layer-group"></i> Governed semantic layer — one definition per metric</div>
+        <div class="feat"><i class="fa-solid fa-magnifying-glass"></i> Metadata-RAG grounds every query</div>
+        <div class="feat g"><i class="fa-solid fa-shield-halved"></i> Compiler guardrail — fan-out inflation impossible</div>
+        <div class="feat g"><i class="fa-solid fa-clipboard-check"></i> Reconciled against trusted-SQL reports</div>
+      </div>
+    </div>
+
+    <div class="mock">
+      <div class="qbar"><i class="fa-solid fa-comment-dots"></i> Occupancy rate for each city</div>
+      <div class="ans"><i class="fa-solid fa-circle-check"></i> Top city: Dubai at 79.0%</div>
+      <div class="trust"><i class="fa-solid fa-shield-halved"></i> via certified metric occupancy_rate · compiled from the semantic layer</div>
+      <div class="bars">
+        <div class="bar"><span class="lbl">Dubai</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="v">79.0%</span></div>
+        <div class="bar"><span class="lbl">Hurghada</span><span class="track"><span class="fill" style="width:94%"></span></span><span class="v">74.1%</span></div>
+        <div class="bar"><span class="lbl">Cairo</span><span class="track"><span class="fill" style="width:87%"></span></span><span class="v">68.9%</span></div>
+        <div class="bar"><span class="lbl">Riyadh</span><span class="track"><span class="fill" style="width:79%"></span></span><span class="v">62.1%</span></div>
+        <div class="bar"><span class="lbl">Alexandria</span><span class="track"><span class="fill" style="width:72%"></span></span><span class="v">57.0%</span></div>
+      </div>
+      <div class="chips"><span>metric: occupancy_rate</span><span>dim: city</span><span>evals 8/8</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="stack"><span>Python</span><span>FastAPI</span><span>DuckDB</span><span>OpenAI</span><span>NL2SQL</span></div>
+    <span>trustquery.vercel.app</span>
+  </div>
+</div>
+</body></html>
