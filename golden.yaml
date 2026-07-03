@@ -1,0 +1,85 @@
+# Golden evaluation set.
+#
+# Each case has:
+#   question     - the natural-language ask
+#   trusted_sql  - an INDEPENDENT, hand-written "trusted report" query. The agent
+#                  never sees this. Reconciliation compares the agent's compiled
+#                  answer against this trusted number (this is "reconciliation
+#                  against trusted customer reports").
+#   expect_metric / expect_dimensions - the plan we expect (planning accuracy).
+#
+# The trap case is what the client's question #3 is about: a naive text-to-SQL
+# system that joins bookings to inventory to compute revenue would fan revenue out
+# and massively inflate it. TrustQuery's semantic layer makes that impossible.
+
+- question: What is our total confirmed revenue?
+  trusted_sql: >
+    SELECT SUM(room_revenue) FROM analytics.bookings WHERE status='confirmed';
+  expect_metric: revenue
+  expect_dimensions: []
+
+- question: Total revenue by region
+  trusted_sql: >
+    SELECT p.region, SUM(b.room_revenue)
+    FROM analytics.bookings b JOIN analytics.properties p ON b.property_id=p.property_id
+    WHERE b.status='confirmed' GROUP BY p.region ORDER BY 2 DESC;
+  expect_metric: revenue
+  expect_dimensions: [region]
+
+- question: How much revenue did we make in Egypt?
+  trusted_sql: >
+    SELECT SUM(b.room_revenue)
+    FROM analytics.bookings b JOIN analytics.properties p ON b.property_id=p.property_id
+    WHERE b.status='confirmed' AND p.region='Egypt';
+  expect_metric: revenue
+  expect_dimensions: []
+
+- question: What is the ADR by room type?
+  trusted_sql: >
+    SELECT room_type, ROUND(SUM(room_revenue)*1.0/NULLIF(SUM(nights),0),2)
+    FROM analytics.bookings WHERE status='confirmed'
+    GROUP BY room_type ORDER BY 2 DESC;
+  expect_metric: adr
+  expect_dimensions: [room_type]
+
+- question: Occupancy rate by city
+  trusted_sql: >
+    WITH sold AS (
+      SELECT property_id, check_in_month AS month, SUM(nights) sold
+      FROM analytics.bookings WHERE status='confirmed' GROUP BY 1,2)
+    SELECT p.city, ROUND(SUM(s.sold)*1.0/NULLIF(SUM(i.available_room_nights),0),4)
+    FROM sold s
+    JOIN analytics.inventory i ON s.property_id=i.property_id AND s.month=i.month
+    JOIN analytics.properties p ON s.property_id=p.property_id
+    GROUP BY p.city ORDER BY 2 DESC;
+  expect_metric: occupancy_rate
+  expect_dimensions: [city]
+
+- question: How many bookings per region?
+  trusted_sql: >
+    SELECT p.region, COUNT(*)
+    FROM analytics.bookings b JOIN analytics.properties p ON b.property_id=p.property_id
+    WHERE b.status='confirmed' GROUP BY p.region ORDER BY 2 DESC;
+  expect_metric: bookings_count
+  expect_dimensions: [region]
+
+- question: Occupancy in Dubai by month
+  trusted_sql: >
+    WITH sold AS (
+      SELECT property_id, check_in_month AS month, SUM(nights) sold
+      FROM analytics.bookings WHERE status='confirmed' GROUP BY 1,2)
+    SELECT s.month, ROUND(SUM(s.sold)*1.0/NULLIF(SUM(i.available_room_nights),0),4)
+    FROM sold s
+    JOIN analytics.inventory i ON s.property_id=i.property_id AND s.month=i.month
+    JOIN analytics.properties p ON s.property_id=p.property_id
+    WHERE p.city='Dubai' GROUP BY s.month ORDER BY 2 DESC;
+  expect_metric: occupancy_rate
+  expect_dimensions: [month]
+
+- question: Total room nights sold in Egypt
+  trusted_sql: >
+    SELECT SUM(b.nights)
+    FROM analytics.bookings b JOIN analytics.properties p ON b.property_id=p.property_id
+    WHERE b.status='confirmed' AND p.region='Egypt';
+  expect_metric: room_nights_sold
+  expect_dimensions: []

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TrustQuery — Governed AI Data Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
+:root{--bg:#0b0f17;--panel:#121826;--panel2:#0e1420;--line:#1f2937;--ink:#e6eaf2;--dim:#8b95a7;--acc:#4f8cff;--acc2:#22d3a6;--warn:#f5a623;--bad:#ef5350}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+code,pre,.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#08111f;font-size:1.2rem}
+.brand h1{font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+.brand p{font-size:.82rem;color:var(--dim)}
+.badge{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;font-weight:600;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.badge .dot{width:8px;height:8px;border-radius:50%}
+.badge.mock .dot{background:var(--warn);box-shadow:0 0 8px var(--warn)}
+.badge.openai .dot{background:var(--acc2);box-shadow:0 0 8px var(--acc2)}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:12px;font-weight:600}
+.side .metric{padding:9px 0;border-bottom:1px solid var(--line)}
+.side .metric:last-child{border-bottom:none}
+.side .metric b{font-size:.9rem}
+.side .metric span{display:block;font-size:.76rem;color:var(--dim);margin-top:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{font-size:.8rem;padding:7px 12px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--acc);color:#fff}
+.askrow{display:flex;gap:10px}
+.askrow input{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:11px;color:var(--ink);padding:14px 16px;font-size:.98rem;font-family:inherit}
+.askrow input:focus{outline:none;border-color:var(--acc)}
+.askrow button{background:linear-gradient(135deg,var(--acc),#3b6fd4);color:#fff;border:none;border-radius:11px;padding:0 22px;font-weight:600;font-size:.95rem;cursor:pointer;display:flex;align-items:center;gap:8px}
+.askrow button:disabled{opacity:.5;cursor:default}
+.answer{margin-top:18px;display:none}
+.answer.show{display:block}
+.headline{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.headline i{color:var(--acc2);margin-right:10px}
+.trustline{font-size:.82rem;color:var(--dim);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.trustline .g{color:var(--acc2)}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--dim);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.panel h4 i{color:var(--acc)}
+pre{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:.8rem;overflow:auto;white-space:pre-wrap;color:#c7d2e5}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--dim);font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+td:last-child,th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.tblwrap{max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.ctx{font-size:.8rem;color:#c7d2e5;white-space:pre-wrap;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;max-height:280px;overflow:auto}
+.retr{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.retr span{font-size:.72rem;padding:4px 9px;border-radius:7px;background:rgba(79,140,255,.12);border:1px solid rgba(79,140,255,.3);color:#9dc0ff}
+.err{color:var(--warn);background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:10px;padding:12px;font-size:.9rem}
+.evalbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.evalbtn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:10px 16px;font-weight:600;font-size:.85rem;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.evalbtn:hover{border-color:var(--acc2)}
+.score{font-size:1.1rem;font-weight:700}
+.score .ok{color:var(--acc2)}
+.evtbl td .p{color:var(--acc2)}.evtbl td .f{color:var(--bad)}
+.mut{color:var(--dim);font-size:.8rem}
+footer{margin-top:26px;text-align:center;color:var(--dim);font-size:.8rem}
+@media(max-width:920px){.grid{grid-template-columns:1fr}.panels{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo"><i class="fa-solid fa-shield-halved"></i></div>
+      <div>
+        <h1>TrustQuery</h1>
+        <p>Ask your data warehouse in plain English — governed answers a CFO can trust.</p>
+      </div>
+    </div>
+    <div class="badge {{ mode }}">
+      <span class="dot"></span>
+      {% if mode == 'openai' %}Live · OpenAI planner{% else %}Demo · offline planner (set OPENAI_API_KEY for live LLM){% endif %}
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- sidebar -->
+    <div class="side">
+      <div class="card" style="margin-bottom:14px">
+        <h3><i class="fa-solid fa-layer-group"></i> Certified metrics</h3>
+        {% for m in metrics %}
+        <div class="metric"><b>{{ m.label }}</b><span>{{ m.doc }}</span></div>
+        {% endfor %}
+      </div>
+      <div class="card">
+        <h3><i class="fa-solid fa-table-columns"></i> Dimensions</h3>
+        <div class="chips">
+          {% for d in dimensions %}<span class="chip" style="cursor:default">{{ d }}</span>{% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- main -->
+    <div>
+      <div class="card">
+        <div class="askrow">
+          <input id="q" placeholder="e.g. Occupancy rate for each city" autocomplete="off"/>
+          <button id="askbtn" onclick="ask()"><i class="fa-solid fa-wand-magic-sparkles"></i> Ask</button>
+        </div>
+        <div class="chips" style="margin-top:12px">
+          {% for s in samples %}<span class="chip" onclick="fill('{{ s }}')">{{ s }}</span>{% endfor %}
+        </div>
+      </div>
+
+      <div id="answer" class="card answer" style="margin-top:16px"></div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="evalbar">
+          <div>
+            <h3 style="margin-bottom:4px"><i class="fa-solid fa-clipboard-check"></i> Eval &amp; reconciliation suite</h3>
+            <span class="mut">Every golden question is reconciled against an independent trusted-SQL report.</span>
+          </div>
+          <button class="evalbtn" onclick="runEvals()"><i class="fa-solid fa-play"></i> Run evals</button>
+        </div>
+        <div id="evals" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    TrustQuery · governed NL-to-SQL over a semantic layer · metadata-RAG retrieval · reconciliation evals ·
+    built by Adel Atya
+  </footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function fill(s){ $('q').value = s; ask(); }
+$('q').addEventListener('keydown', e => { if(e.key==='Enter') ask(); });
+
+async function ask(){
+  const q = $('q').value.trim(); if(!q) return;
+  const btn = $('askbtn'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Thinking';
+  const box = $('answer'); box.classList.add('show');
+  box.innerHTML = '<span class="mut"><i class="fa-solid fa-spinner fa-spin"></i> Planning &amp; compiling…</span>';
+  try{
+    const r = await fetch('/ask', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({question:q})});
+    const d = await r.json();
+    if(d.error){ box.innerHTML = '<div class="err"><i class="fa-solid fa-shield-halved"></i> '+d.error+'</div>'; return; }
+    box.innerHTML = render(d);
+  }catch(e){ box.innerHTML = '<div class="err">Request failed: '+e+'</div>'; }
+  finally{ btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-wand-magic-sparkles"></i> Ask'; }
+}
+
+function render(d){
+  const head = document.createElement('div');
+  const cols = d.columns.map(c=>'<th>'+c+'</th>').join('');
+  const rows = d.rows.map(r=>'<tr>'+r.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('');
+  const retr = d.retrieved.slice(0,6).map(x=>'<span>'+x.kind+':'+x.name+' · '+x.score+'</span>').join('');
+  return `
+    <div class="headline"><i class="fa-solid fa-circle-check"></i>${escapeHtml(d.answer)}</div>
+    <div class="trustline"><i class="fa-solid fa-shield-halved g"></i> Answered via certified metric
+       <b>&nbsp;${d.spec.metric}</b> · compiled from the semantic layer · ${d.row_count} row(s)</div>
+    <div class="panels">
+      <div class="panel">
+        <h4><i class="fa-solid fa-table"></i> Result</h4>
+        <div class="tblwrap"><table><thead><tr>${cols}</tr></thead><tbody>${rows}</tbody></table></div>
+      </div>
+      <div class="panel">
+        <h4><i class="fa-solid fa-code"></i> Compiled SQL (from semantic layer)</h4>
+        <pre>${escapeHtml(d.sql)}</pre>
+      </div>
+      <div class="panel">
+        <h4><i class="fa-solid fa-magnifying-glass"></i> Metadata-RAG retrieval</h4>
+        <div class="retr">${retr}</div>
+        <div class="ctx" style="margin-top:8px">${escapeHtml(d.context)}</div>
+      </div>
+      <div class="panel">
+        <h4><i class="fa-solid fa-diagram-project"></i> Query plan (spec)</h4>
+        <pre>${escapeHtml(JSON.stringify(d.spec,null,2))}</pre>
+      </div>
+    </div>`;
+}
+
+async function runEvals(){
+  const box = $('evals'); box.innerHTML = '<span class="mut"><i class="fa-solid fa-spinner fa-spin"></i> Running reconciliation…</span>';
+  try{
+    const r = await fetch('/evals'); const d = await r.json();
+    const rows = d.results.map(x=>{
+      const ok = x.pass;
+      const badge = ok ? '<span class="p"><i class="fa-solid fa-check"></i> pass</span>' : '<span class="f"><i class="fa-solid fa-xmark"></i> fail</span>';
+      const av = x.agent_value!=null ? fmtNum(x.agent_value) : '—';
+      const tv = x.trusted_value!=null ? fmtNum(x.trusted_value) : '—';
+      return '<tr><td>'+escapeHtml(x.question)+'</td><td>'+(x.metric||'—')+'</td><td>'+av+'</td><td>'+tv+'</td><td>'+badge+'</td></tr>';
+    }).join('');
+    box.innerHTML = `
+      <div class="score">Reconciliation: <span class="ok">${d.passed}/${d.total}</span> passed
+        <span class="mut">(${Math.round(d.pass_rate*100)}%)</span></div>
+      <div class="tblwrap" style="margin-top:10px"><table class="evtbl">
+        <thead><tr><th>Question</th><th>Metric</th><th>Agent</th><th>Trusted SQL</th><th>Result</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>`;
+  }catch(e){ box.innerHTML = '<div class="err">Eval failed: '+e+'</div>'; }
+}
+
+// auto-run from URL hash (used for screenshots / shareable deep links)
+window.addEventListener('load', async () => {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if(h){ $('q').value = h; await ask(); if(location.search.indexOf('evals')>=0) await runEvals(); }
+});
+function fmtNum(n){ n=Number(n); return Math.abs(n)>=1000 ? n.toLocaleString(undefined,{maximumFractionDigits:0}) : n.toLocaleString(undefined,{maximumFractionDigits:2}); }
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+</script>
+</body>
+</html>

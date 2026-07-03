@@ -1,0 +1,6 @@
+fastapi
+duckdb
+pyyaml
+openai
+jinja2
+python-multipart

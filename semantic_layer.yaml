@@ -1,0 +1,109 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TrustQuery governed semantic layer
+#
+# This file is the single source of truth. Metrics have exactly ONE definition,
+# dimensions map to exactly one column, and joins are certified here — the LLM is
+# NEVER allowed to invent a join path or a metric formula. The compiler builds SQL
+# only from what is declared below, which is what makes the numbers reproducible
+# and safe from fan-out inflation.
+# ─────────────────────────────────────────────────────────────────────────────
+
+entities:
+  bookings:
+    table: analytics.bookings
+    grain: one row per booking
+    doc: >
+      Confirmed and cancelled hotel reservations. Revenue, room-nights, ADR and
+      booking counts are computed here. Always filter status = 'confirmed' for
+      realised business metrics.
+    columns:
+      room_revenue: total room revenue for the booking (money)
+      nights: number of room-nights in the booking
+      room_type: Standard / Deluxe / Suite
+      check_in_month: check-in month, format YYYY-MM
+      status: confirmed or cancelled
+  properties:
+    table: analytics.properties
+    grain: one row per hotel property
+    doc: Hotel master data — name, city, region, and physical room count.
+    columns:
+      property_name: hotel name
+      city: city the hotel is in
+      region: country / region
+      rooms: number of physical rooms (capacity)
+  inventory:
+    table: analytics.inventory
+    grain: one row per property per month
+    doc: >
+      Available room-nights per property per month (rooms * days in month). This is
+      the denominator for occupancy. Non-additive across room_type — occupancy is
+      not defined at room-type grain.
+
+# Certified relationships. The compiler will ONLY join along these.
+join_paths:
+  bookings__properties:
+    left: analytics.bookings.property_id
+    right: analytics.properties.property_id
+    cardinality: many_to_one   # safe: no fan-out of booking rows
+  sold__inventory:
+    left: property_id + month
+    right: analytics.inventory (property_id, month)
+    cardinality: one_to_one
+    note: occupancy joins PRE-AGGREGATED sold room-nights to inventory, never raw bookings.
+
+# Certified dimensions: name -> where it comes from.
+dimensions:
+  property_name: {source: properties.property_name, needs_join: properties}
+  city:          {source: properties.city,          needs_join: properties}
+  region:        {source: properties.region,        needs_join: properties}
+  room_type:     {source: bookings.room_type,       needs_join: none}
+  month:         {source: bookings.check_in_month,   needs_join: none}
+
+# Certified metrics. ONE definition each.
+metrics:
+  revenue:
+    label: Revenue
+    kind: additive
+    sql: SUM(b.room_revenue)
+    format: money
+    synonyms: [revenue, sales, income, total revenue, earnings, turnover]
+    doc: Total realised room revenue from confirmed bookings.
+  room_nights_sold:
+    label: Room Nights Sold
+    kind: additive
+    sql: SUM(b.nights)
+    format: number
+    synonyms: [room nights, nights sold, room-nights, occupied nights]
+    doc: Sum of nights across confirmed bookings.
+  bookings_count:
+    label: Bookings
+    kind: additive
+    sql: COUNT(*)
+    format: number
+    synonyms: [bookings, number of bookings, reservations, how many bookings]
+    doc: Count of confirmed bookings.
+  adr:
+    label: ADR (Average Daily Rate)
+    kind: ratio
+    numerator: SUM(b.room_revenue)
+    denominator: SUM(b.nights)
+    format: money
+    synonyms: [adr, average daily rate, average rate, rate per night, price per night]
+    doc: Revenue divided by room-nights sold. A ratio — never averaged of averages.
+  occupancy_rate:
+    label: Occupancy Rate
+    kind: occupancy          # special non-additive template in the compiler
+    format: percent
+    allowed_dimensions: [property_name, city, region, month]  # NOT room_type
+    synonyms: [occupancy, occupancy rate, utilisation, how full, fill rate]
+    doc: >
+      Sold room-nights divided by available room-nights. Computed by aggregating
+      sold nights to property-month, joining inventory, then SUM(sold)/SUM(avail).
+      Not defined at room_type grain because inventory has no room-type split.
+
+glossary:
+  Revenue: Realised room revenue from confirmed bookings only (excludes cancellations).
+  Occupancy: Share of available room-nights that were sold. A ratio between 0 and 1.
+  ADR: Average Daily Rate = revenue / room-nights sold.
+  Confirmed: A booking that was not cancelled; the basis for all realised metrics.
+  Region: Country grouping (Egypt, UAE, KSA).
